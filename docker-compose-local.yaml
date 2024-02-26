@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  nest-cli-postgres:
+    image: postgres:16.1
+    ports:
+      - '${POSTGRES_PORT}:5433'
+    environment:
+      POSTGRES_USER: '${POSTGRES_USER:-user}'
+      POSTGRES_PASSWORD: '${POSTGRES_PASSWORD:-password}'
+      POSTGRES_DB: '${POSTGRES_DB:-nest-cli}'
+    volumes:
+      - ./nest-cli-api-db:/var/lib/postgresql/data
+
+  nest-cli-redis:
+    image: redis:7.2.3
+    ports:
+      - '${REDIS_PORT:-6379}:6379'
+    command: >
+      --requirepass '${REDIS_PASSWORD:-redispass}'
+    restart: unless-stopped
+  
+  nest-cli-s3:
+    image: quay.io/minio/minio:latest
+    command: server /data --console-address ":9001"
+    restart: unless-stopped
+    ports:
+      - "7001:9001"
+    volumes:
+      - ./nest-cli-api-s3-data:/usr/src/app/s3
+    environment:
+      - MINIO_ROOT_USER=user
+      - MINIO_ROOT_PASSWORD=password
+
+volumes:
+  nest-cli-api-db:
+  nest-cli-api-s3-data:
