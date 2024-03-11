@@ -6,6 +6,7 @@ import {
   TypeOrmModuleOptions,
   TypeOrmOptionsFactory,
 } from '@nestjs/typeorm/dist/interfaces/typeorm-options.interface';
+
 import { Config, PostgresConfig } from '../../configs/config.type';
 
 @Injectable()
@@ -24,23 +25,23 @@ export class PostgresService implements TypeOrmOptionsFactory {
         path.join(
           process.cwd(),
           'dist',
-        //   'src',
+          // 'src',
           'database',
           'entities',
           '*.entity.js',
         ),
       ],
-    //   migrations: [
-    //     path.join(
-    //       process.cwd(),
-    //       'dist',
-    //       'src',
-    //       'database',
-    //       'migrations',
-    //       '*.js',
-    //     ),
-    //   ],
-    //   migrationsRun: true,
+      migrations: [
+        path.join(
+          process.cwd(),
+          'dist',
+          // 'src',
+          'database',
+          'migrations',
+          '*.js',
+        ),
+      ],
+      migrationsRun: true,
       synchronize: false,
     };
   }
